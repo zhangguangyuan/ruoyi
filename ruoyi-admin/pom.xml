@@ -91,70 +91,15 @@
         </extensions>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.1.1.RELEASE</version>
-                <configuration>
-					<fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
-				</configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>   
-                <artifactId>maven-war-plugin</artifactId>   
-                <version>3.0.0</version>   
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <warName>${project.artifactId}</warName>
-                </configuration>   
-		   </plugin>-->
-            <plugin>
                 <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>1.2.2</version>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.13</version>
                 <configuration>
-                    <!--镜像名称-->
-                    <imageName>${project.artifactId}:${project.version}</imageName>
-                    <!--指定标签-->
-                    <imageTags>
-                        <imageTag>latest</imageTag>
-                    </imageTags>
-                    <!--基础镜像jdk1.8-->
-                    <baseImage>java</baseImage>
-                    <!--制作者提供本人信息-->
-                    <maintainer>company.com</maintainer>
-                    <!--切换到/ROOT目录-->
-                    <workdir>/ROOT</workdir>
-                    <cmd>["java","-version"]</cmd>
-                    <entryPoint>["java","-jar","${project.build.finalName}.jar"]</entryPoint>
-                    <!--指定Dockerfile路径<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>-->
-                    <!--指定远程docker api地址此处未加CA加密认证。-->
-                    <dockerHost>http://101.34.12.63:2375</dockerHost>
-                    <!--这里是复制jar包到docker容器指定目录配置-->
-                    <resources>
-                        <resource>
-                            <targetPath>/ROOT</targetPath>
-                            <!--用于指定需要复制的根目录，${project.build.directory}表示target目录-->
-                            <directory>${project.build.directory}
-                            </directory>
-                            <!--用于指定需要复制的文件。${project.build.finalName}.jar指的是打包后的jar包文件。-->
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
+                    <repository>${project.build.finalName}:${project.version}</repository>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                    </buildArgs>
                 </configuration>
-                <!--当执行mvnpackage时，执行：mvncleanpackagedocker:build-->
-                <executions>
-                    <execution>
-                        <id>build-image</id>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <finalName>${project.artifactId}</finalName>
