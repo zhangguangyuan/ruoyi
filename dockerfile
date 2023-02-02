@@ -1,5 +1,5 @@
 # 基础镜像
-FROM  jdk:8
+FROM  openjdk:1.8
 # author
 MAINTAINER ruoyi
 
@@ -10,6 +10,8 @@ RUN mkdir -p /home/ruoyi
 # 指定路径
 WORKDIR /home/ruoyi
 # 复制jar文件到路径
-COPY ./jar/ruoyi-admin.jar /home/ruoyi/ruoyi-admin.jar
+COPY ${JAR_FILE} app.jar
+
+EXPOSE 8081
 # 启动认证服务
-ENTRYPOINT ["java","-jar","ruoyi-admin.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
